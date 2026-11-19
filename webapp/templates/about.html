@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}About the model &middot; Skin Condition Classifier{% endblock %}
+
+{% block content %}
+<article class="prose">
+  <h1>About the model</h1>
+  <p>This app runs the image classifier from <code>SCIN_skin_condition_classification_baseline.ipynb</code>. It looks at a single photo and estimates which of {{ card.num_classes }} skin conditions it most resembles. It does not use symptoms, body location, duration or any other information a doctor would ask about.</p>
+  <p class="source-line">{{ card.source }}</p>
+
+  <h2>How it was trained</h2>
+  <dl class="facts">
+    {% for label, value in card.model %}
+    <dt>{{ label }}</dt><dd>{{ value }}</dd>
+    {% endfor %}
+  </dl>
+
+  <h2>Data</h2>
+  <p>Images and labels come from <a href="https://github.com/google-research-datasets/scin" rel="noopener">SCIN</a>, a set of crowdsourced skin photos labelled by dermatologists. Images from one case never appear in more than one split.</p>
+  <table class="data-table compact">
+    <tbody>
+      {% for label, value in card.data %}
+      <tr><th scope="row">{{ label }}</th><td class="num">{{ value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Test-set results</h2>
+  <p>Measured once on the {{ '{:,}'.format(card.test_images) }} held-out test images.</p>
+  <table class="data-table compact">
+    <tbody>
+      {% for label, value in card.test_metrics %}
+      <tr><th scope="row">{{ label }}</th><td class="num">{{ value }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h3>By condition</h3>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th scope="col">Condition</th>
+          <th scope="col" class="num">Test images</th>
+          <th scope="col" class="num">Precision</th>
+          <th scope="col" class="num">Recall</th>
+          <th scope="col" class="num">F1</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in card.per_class %}
+        <tr{% if row.recall == 0 %} class="is-zero"{% endif %}>
+          <th scope="row">{{ row.name }}</th>
+          <td class="num">{{ row.support }}</td>
+          <td class="num">{{ '%.2f' % row.precision }}</td>
+          <td class="num">{{ '%.2f' % row.recall }}</td>
+          <td class="num">{{ '%.2f' % row.f1 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Limitations</h2>
+  <ul>
+    <li>Compare the accuracy with two simple baselines: always answering "{{ card.majority_label }}" would score {{ card.majority_share }} on this test set, and random guessing about {{ card.chance }}.{% if card.never_correct %} {{ card.never_correct }} of the {{ card.num_classes }} conditions were never correctly identified in testing.{% endif %}</li>
+    <li>Each case is reduced to its single most likely condition, while dermatologists often gave a list of possibilities.</li>
+    <li>Rare conditions, and anything outside these {{ card.num_classes }}, are not covered. The model will still return one of these names for any photo.</li>
+    <li>SCIN is crowdsourced from people in the United States. Results may differ for other populations, skin tones and cameras.</li>
+  </ul>
+
+  <h2>Conditions the model knows</h2>
+  <dl class="condition-list">
+    {% for name, info in conditions %}
+    <dt>{{ name }}</dt>
+    <dd>
+      {{ info.summary }}
+      {% if info.note %}<span class="condition-note">{{ info.note }}</span>{% endif %}
+    </dd>
+    {% endfor %}
+  </dl>
+</article>
+{% endblock %}

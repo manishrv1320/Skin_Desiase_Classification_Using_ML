@@ -1,0 +1,6 @@
+# TensorFlow is pinned to the version the notebook ran on in Colab,
+# so the saved .keras file loads without format mismatches.
+tensorflow==2.21.0
+flask>=3.0,<4
+pillow>=10.0
+numpy

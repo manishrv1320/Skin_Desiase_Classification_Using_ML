@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="intro">
+  <h1>Check a photo of a skin condition</h1>
+  <p>Upload a clear photo of the affected skin. The classifier compares it against 20 conditions from the SCIN dataset and lists the {{ top_k }} closest matches, each with a probability.</p>
+</section>
+
+{% if not model_ready %}
+<div class="notice notice-error" role="alert">
+  <p><strong>No model is loaded.</strong> {{ model_error }}</p>
+  <p>Run <code>python train_model.py</code> in the <code>webapp</code> folder to train the model on this computer, or copy <code>scin_skin_condition_classifier.keras</code> and <code>scin_class_names.json</code> from Colab into <code>webapp/model/</code>. Then restart the server.</p>
+</div>
+{% endif %}
+
+<div class="workspace">
+  <section class="panel" aria-labelledby="photo-heading">
+    <h2 id="photo-heading">Photo</h2>
+
+    <form id="upload-form"
+          action="{{ url_for('predict') }}"
+          data-max-bytes="{{ max_upload_bytes }}"
+          data-model-ready="{{ 'true' if model_ready else 'false' }}"
+          novalidate>
+      <label class="dropzone" id="dropzone" for="file-input">
+        <input type="file" id="file-input" name="image" class="visually-hidden"
+               accept="image/jpeg,image/png,image/webp,image/bmp">
+        <span class="dropzone-prompt" id="dropzone-prompt">
+          <span class="dropzone-title">Choose a photo</span>
+          <span>or drag one here, or paste from the clipboard</span>
+          <span class="dropzone-hint">JPEG, PNG, WebP or BMP &middot; up to {{ (max_upload_bytes / 1048576) | int }} MB</span>
+        </span>
+        <img id="preview" class="preview" alt="The photo you selected" hidden>
+      </label>
+
+      <p class="file-meta" id="file-meta" hidden></p>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Run classifier</button>
+        <button type="button" class="btn" id="reset-btn" hidden>Use a different photo</button>
+      </div>
+
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+    </form>
+
+    <details class="tips">
+      <summary>Taking a usable photo</summary>
+      <ul>
+        <li>Use daylight or bright, even light. Avoid flash glare.</li>
+        <li>Fill most of the frame with the affected area, with a little normal skin around it.</li>
+        <li>Hold the camera steady about 15&ndash;30 cm from the skin so the texture is in focus.</li>
+        <li>One area per photo. Crop out clothing, jewellery and background where you can.</li>
+      </ul>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="results-heading">
+    <h2 id="results-heading">Results</h2>
+
+    <div aria-live="polite">
+      <p class="results-empty" id="results-empty">Results appear here after you run the classifier.</p>
+
+      <div id="results" hidden>
+        <div class="top-match">
+          <p class="eyebrow">Closest match</p>
+          <p class="top-name" id="top-name"></p>
+          <p class="top-prob"><span id="top-prob"></span> probability</p>
+          <p class="top-summary" id="top-summary"></p>
+          <p class="top-note" id="top-note" hidden></p>
+        </div>
+
+        <p class="caution" id="low-confidence" hidden>
+          The closest match is below {{ (low_confidence * 100) | int }}%. The model isn't sure about this photo, so read the list as a rough ranking rather than an answer.
+        </p>
+
+        <h3 class="ranking-heading">Top {{ top_k }} matches</h3>
+        <ol class="ranking" id="ranking"></ol>
+
+        <p class="results-footnote">The model only knows the 20 conditions listed on the <a href="{{ url_for('about') }}">About</a> page and always picks from them, even when the photo shows something else.</p>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+{% endblock %}

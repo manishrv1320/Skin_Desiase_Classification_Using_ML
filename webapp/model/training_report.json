@@ -1,0 +1,173 @@
+{
+  "source": "The numbers on this page are from the model trained locally with train_model.py on 2026-11-19.",
+  "tensorflow": "2.21.0",
+  "keras": "3.15.1",
+  "best_epoch": 4,
+  "epochs_run": 9,
+  "data": {
+    "cases_total": 5033,
+    "cases_labelled": 3061,
+    "cases_kept": 2140,
+    "images": 4583,
+    "train": [
+      3209,
+      1493
+    ],
+    "validation": [
+      685,
+      321
+    ],
+    "test": [
+      689,
+      321
+    ]
+  },
+  "test": {
+    "accuracy": 0.22351233671988388,
+    "balanced_accuracy": 0.08188866122671459,
+    "macro_f1": 0.07490796827669316,
+    "weighted_f1": 0.1524559985539044
+  },
+  "per_class": [
+    {
+      "name": "Acne",
+      "precision": 0.1579,
+      "recall": 0.1765,
+      "f1": 0.1667,
+      "support": 17
+    },
+    {
+      "name": "Acute dermatitis, NOS",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 15
+    },
+    {
+      "name": "Allergic Contact Dermatitis",
+      "precision": 0.1379,
+      "recall": 0.0426,
+      "f1": 0.065,
+      "support": 94
+    },
+    {
+      "name": "CD - Contact dermatitis",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 15
+    },
+    {
+      "name": "Drug Rash",
+      "precision": 0.5,
+      "recall": 0.1176,
+      "f1": 0.1905,
+      "support": 17
+    },
+    {
+      "name": "Eczema",
+      "precision": 0.2795,
+      "recall": 0.7455,
+      "f1": 0.4066,
+      "support": 165
+    },
+    {
+      "name": "Folliculitis",
+      "precision": 0.2333,
+      "recall": 0.1628,
+      "f1": 0.1918,
+      "support": 43
+    },
+    {
+      "name": "Herpes Simplex",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 20
+    },
+    {
+      "name": "Herpes Zoster",
+      "precision": 0.0625,
+      "recall": 0.0476,
+      "f1": 0.0541,
+      "support": 21
+    },
+    {
+      "name": "Impetigo",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 23
+    },
+    {
+      "name": "Insect Bite",
+      "precision": 0.0833,
+      "recall": 0.0556,
+      "f1": 0.0667,
+      "support": 54
+    },
+    {
+      "name": "Irritant Contact Dermatitis",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 12
+    },
+    {
+      "name": "Keratosis pilaris",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 13
+    },
+    {
+      "name": "Lichen Simplex Chronicus",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 8
+    },
+    {
+      "name": "Pigmented purpuric eruption",
+      "precision": 0.3,
+      "recall": 0.15,
+      "f1": 0.2,
+      "support": 20
+    },
+    {
+      "name": "Pityriasis rosea",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 15
+    },
+    {
+      "name": "Psoriasis",
+      "precision": 0.0625,
+      "recall": 0.0286,
+      "f1": 0.0392,
+      "support": 35
+    },
+    {
+      "name": "Tinea",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 28
+    },
+    {
+      "name": "Tinea Versicolor",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 11
+    },
+    {
+      "name": "Urticaria",
+      "precision": 0.125,
+      "recall": 0.1111,
+      "f1": 0.1176,
+      "support": 63
+    }
+  ]
+}
