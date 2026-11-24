@@ -2,8 +2,15 @@
 
 {% block content %}
 <section class="intro">
-  <h1>Check a photo of a skin condition</h1>
-  <p>Upload a clear photo of the affected skin. The classifier compares it against 20 conditions from the SCIN dataset and lists the {{ top_k }} closest matches, each with a probability.</p>
+  <div class="intro-copy">
+    <p class="kicker">A skin image reference</p>
+    <h1>A clearer starting point for understanding a skin photo.</h1>
+    <p>Share a clear photo to see the {{ top_k }} closest matches from 20 conditions in the SCIN dataset. Use the list as a reference, not a diagnosis.</p>
+  </div>
+  <div class="intro-stamp" aria-label="20 conditions in the reference set">
+    <span class="stamp-number">20</span>
+    <span class="stamp-label">conditions<br>in the reference set</span>
+  </div>
 </section>
 
 {% if not model_ready %}
@@ -15,7 +22,10 @@
 
 <div class="workspace">
   <section class="panel" aria-labelledby="photo-heading">
-    <h2 id="photo-heading">Photo</h2>
+    <div class="panel-heading">
+      <span class="step-number" aria-hidden="true">01</span>
+      <div><p class="panel-kicker">Start here</p><h2 id="photo-heading">Add a photo</h2></div>
+    </div>
 
     <form id="upload-form"
           action="{{ url_for('predict') }}"
@@ -26,6 +36,9 @@
         <input type="file" id="file-input" name="image" class="visually-hidden"
                accept="image/jpeg,image/png,image/webp,image/bmp">
         <span class="dropzone-prompt" id="dropzone-prompt">
+          <span class="upload-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M16 21V7m0 0-5 5m5-5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 20v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </span>
           <span class="dropzone-title">Choose a photo</span>
           <span>or drag one here, or paste from the clipboard</span>
           <span class="dropzone-hint">JPEG, PNG, WebP or BMP &middot; up to {{ (max_upload_bytes / 1048576) | int }} MB</span>
@@ -36,8 +49,8 @@
       <p class="file-meta" id="file-meta" hidden></p>
 
       <div class="actions">
-        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Run classifier</button>
-        <button type="button" class="btn" id="reset-btn" hidden>Use a different photo</button>
+        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Preview matches</button>
+        <button type="button" class="btn" id="reset-btn" disabled>Use a different photo</button>
       </div>
 
       <p class="form-error" id="form-error" role="alert" hidden></p>
@@ -55,25 +68,27 @@
   </section>
 
   <section class="panel" aria-labelledby="results-heading">
-    <h2 id="results-heading">Results</h2>
+    <div class="panel-heading">
+      <span class="step-number" aria-hidden="true">02</span>
+      <div><p class="panel-kicker">Your reference list</p><h2 id="results-heading">Closest matches</h2></div>
+    </div>
 
     <div aria-live="polite">
-      <p class="results-empty" id="results-empty">Results appear here after you run the classifier.</p>
+      <div class="results-empty" id="results-empty">
+        <span class="empty-rule" aria-hidden="true"></span>
+        <p>Your matches will appear here.</p>
+        <span>Choose a photo to get started.</span>
+      </div>
 
       <div id="results" hidden>
         <div class="top-match">
           <p class="eyebrow">Closest match</p>
           <p class="top-name" id="top-name"></p>
-          <p class="top-prob"><span id="top-prob"></span> probability</p>
           <p class="top-summary" id="top-summary"></p>
           <p class="top-note" id="top-note" hidden></p>
         </div>
 
-        <p class="caution" id="low-confidence" hidden>
-          The closest match is below {{ (low_confidence * 100) | int }}%. The model isn't sure about this photo, so read the list as a rough ranking rather than an answer.
-        </p>
-
-        <h3 class="ranking-heading">Top {{ top_k }} matches</h3>
+        <h3 class="ranking-heading">Other close matches</h3>
         <ol class="ranking" id="ranking"></ol>
 
         <p class="results-footnote">The model only knows the 20 conditions listed on the <a href="{{ url_for('about') }}">About</a> page and always picks from them, even when the photo shows something else.</p>

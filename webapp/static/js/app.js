@@ -18,10 +18,8 @@
   var resultsEmpty = document.getElementById("results-empty");
   var results = document.getElementById("results");
   var topName = document.getElementById("top-name");
-  var topProb = document.getElementById("top-prob");
   var topSummary = document.getElementById("top-summary");
   var topNote = document.getElementById("top-note");
-  var lowConfidence = document.getElementById("low-confidence");
   var ranking = document.getElementById("ranking");
 
   var maxBytes = Number(form.dataset.maxBytes) || 10 * 1024 * 1024;
@@ -34,12 +32,6 @@
   function formatSize(bytes) {
     if (bytes < 1024 * 1024) return Math.max(1, Math.round(bytes / 1024)) + " KB";
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-  }
-
-  function formatPercent(p) {
-    var pct = p * 100;
-    if (pct > 0 && pct < 0.1) return "<0.1%";
-    return pct.toFixed(1) + "%";
   }
 
   function showError(message) {
@@ -84,7 +76,7 @@
     fileMeta.hidden = false;
 
     submitBtn.disabled = !modelReady;
-    resetBtn.hidden = false;
+    resetBtn.disabled = false;
     clearResults();
   }
 
@@ -101,7 +93,7 @@
     fileMeta.hidden = true;
 
     submitBtn.disabled = true;
-    resetBtn.hidden = true;
+    resetBtn.disabled = true;
     clearError();
     clearResults();
     input.focus();
@@ -110,7 +102,7 @@
   function setBusy(busy) {
     submitBtn.disabled = busy || !currentFile || !modelReady;
     submitBtn.setAttribute("aria-busy", busy ? "true" : "false");
-    submitBtn.textContent = busy ? "Running…" : "Run classifier";
+    submitBtn.textContent = busy ? "Preparing preview…" : "Preview matches";
     resetBtn.disabled = busy;
   }
 
@@ -128,13 +120,6 @@
 
     summary.appendChild(el("span", "rank", String(index + 1)));
     summary.appendChild(el("span", "rank-name", prediction.label));
-    summary.appendChild(el("span", "rank-pct", formatPercent(prediction.probability)));
-
-    var bar = el("span", "rank-bar");
-    var fill = document.createElement("span");
-    fill.style.width = Math.max(0.5, prediction.probability * 100).toFixed(1) + "%";
-    bar.appendChild(fill);
-    summary.appendChild(bar);
 
     details.appendChild(summary);
     details.appendChild(el("p", "rank-detail", prediction.summary || "No description available."));
@@ -151,11 +136,9 @@
 
     var top = predictions[0];
     topName.textContent = top.label;
-    topProb.textContent = formatPercent(top.probability);
     topSummary.textContent = top.summary || "";
     topNote.textContent = top.note || "";
     topNote.hidden = !top.note;
-    lowConfidence.hidden = !data.low_confidence;
 
     ranking.replaceChildren.apply(ranking, predictions.map(renderRankItem));
 

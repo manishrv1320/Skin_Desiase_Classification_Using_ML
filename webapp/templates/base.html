@@ -10,7 +10,10 @@
 <body>
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="{{ url_for('index') }}">Skin Condition Classifier</a>
+      <a class="brand" href="{{ url_for('index') }}" aria-label="Skin Condition Classifier home">
+        <span class="brand-mark" aria-hidden="true">SC</span>
+        <span class="brand-name">Skin condition <strong>classifier</strong></span>
+      </a>
       <nav class="site-nav" aria-label="Main">
         <a href="{{ url_for('index') }}"{% if request.endpoint == 'index' %} aria-current="page"{% endif %}>Check a photo</a>
         <a href="{{ url_for('about') }}"{% if request.endpoint == 'about' %} aria-current="page"{% endif %}>About the model</a>
@@ -24,7 +27,7 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>For education and research only. This is not a medical diagnosis. If a skin problem is spreading quickly, painful, bleeding, or comes with fever, see a doctor.</p>
+      <p class="footer-note">For education and research only. This is not a medical diagnosis. If a skin problem is spreading quickly, painful, bleeding, or comes with fever, see a doctor.</p>
       <p>Model trained on the SCIN dataset from Google Research, used under the SCIN data use license.</p>
     </div>
   </footer>
