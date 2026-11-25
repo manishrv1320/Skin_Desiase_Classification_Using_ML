@@ -76,7 +76,6 @@
     fileMeta.hidden = false;
 
     submitBtn.disabled = !modelReady;
-    resetBtn.disabled = false;
     clearResults();
   }
 
@@ -93,7 +92,6 @@
     fileMeta.hidden = true;
 
     submitBtn.disabled = true;
-    resetBtn.disabled = true;
     clearError();
     clearResults();
     input.focus();
